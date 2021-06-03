@@ -5,7 +5,6 @@ metadata:
   namespace: hello-ossm-ts
 spec:
   gateways:
-  - mesh
   - hello-ossm-ts-gw
   hosts:
   - hello-ossm-ts.apps.example.com # external public route exposed on router
