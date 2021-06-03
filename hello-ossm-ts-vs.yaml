@@ -1,0 +1,27 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: hello-ossm-ts-vs
+  namespace: hello-ossm-ts
+spec:
+  gateways:
+  - mesh
+  - hello-ossm-ts-gw
+  hosts:
+  - hello-ossm-ts.apps.example.com # external public route exposed on router
+  - hello-ossm-ts.istio-system.svc # custom svc exposed on ingressgateway for internal cluster connection(internal cluster, external from mesh)
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: hello-ossm-ts-v1
+        port:
+          number: 8080
+      weight: 20
+    - destination:
+        host: hello-ossm-ts-v2
+        port:
+          number: 8080
+      weight: 80
