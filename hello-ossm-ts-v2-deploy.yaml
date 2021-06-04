@@ -9,24 +9,22 @@ spec:
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: hello-ossm-ts-v2
-      version: v1
+      app: hello-ossm-ts
+      version: v2
   template:
     metadata:
       annotations:
         sidecar.istio.io/inject: "true"
       creationTimestamp: null
       labels:
-        app: hello-ossm-ts-v2
-        deploymentconfig: hello-ossm-ts-v2
-        version: v1
+        app: hello-ossm-ts
+        version: v2
     spec:
       containers:
       - env:
         - name: RESPONSE
           value: Hello from V2 - Traffic Splitting
-        image: docker.io/openshift/hello-openshift:latest
-        imagePullPolicy: IfNotPresent
+        image: image-registry.openshift-image-registry.svc:5000/hello-ossm-ts/hello-openshift:latest
         name: hello-ossm-ts-v2
         ports:
         - containerPort: 8080

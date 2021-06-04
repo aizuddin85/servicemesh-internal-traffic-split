@@ -1,0 +1,118 @@
+apiVersion: maistra.io/v2
+kind: ServiceMeshControlPlane
+metadata:
+  name: smpc-config
+spec:
+  proxy:
+    resources:
+      requests:
+        cpu: 5000m
+        memory: 1Gi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+  tracing:
+    type: Jaeger
+  gateways:
+    ingress: # istio-ingressgateway
+      enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 4
+    egress: # istio-egressgateway
+      enabled: true
+      runtime:
+        deployment:
+          autoScaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 4
+    additionalIngress:
+      hello-ossm-ts-ingressgateway:
+        enabled: true
+        runtime:
+          deployment:
+            autoScaling:
+              enabled: true
+              minReplicas: 2
+              maxReplicas: 6
+#    additionalEgress:
+#      some-other-egress-gateway: {}
+
+  policy:
+    type: Mixer
+    mixer:
+      enableChecks: true # To enable Rate Limiting functionalities based on  https://access.redhat.com/support/cases/#/case/02949286
+      failOpen: false
+
+  telemetry:
+    type: Istiod
+
+  addons:
+    grafana:
+      enabled: true
+      install:
+        persistence:
+          storageClassName: "ocs-storagecluster-ceph-rbd"
+          accessMode: ReadWriteOnce
+        service:
+          ingress:
+            contextPath: /grafana
+            tls:
+              termination: reencrypt
+    kiali:
+      name: kiali
+      enabled: true
+      install: # install kiali CR if not present
+        dashboard:
+          viewOnly: false
+          enableGrafana: true
+          enableTracing: true
+          enablePrometheus: true
+      service:
+        ingress:
+          contextPath: /kiali
+    jaeger:
+      name: jaeger
+      install:
+        storage:
+          type: Elasticsearch
+          memory:
+            maxTraces: 100000 # Trace all for testing, in prod we should not trace every sample, its resource intensive.
+          elasticsearch:
+            nodeCount: 1
+            storage:
+              storageClassName: "ocs-storagecluster-ceph-rbd"
+              size: "500G"
+            redundancyPolicy: ZeroRedundancy #Single ES, non HA.
+            indexCleaner:
+              enabled: true
+              numberOfDays: 7
+        ingress: {} # jaeger ingress configuration
+  runtime:
+    components:
+      pilot:
+        deployment:
+          autoScaling:
+            enabled: true
+            minReplicas: 2
+            maxReplicas: 6
+            targetCPUUtilizationPercentage: 80
+        pod:
+          affinity: {}
+        container:
+          resources:
+            requests:
+              cpu: 1000m
+              memory: 2Gi
+          limits: {}
+          requirements: {}
+      grafana:
+        deployment: {}
+        pod: {}
+      kiali:
+        deployment: {}
+        pod: {}

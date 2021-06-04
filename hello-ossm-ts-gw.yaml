@@ -1,3 +1,4 @@
+apiVersion: networking.istio.io/v1beta1
 kind: Gateway
 metadata:
   name: hello-ossm-ts-gw
@@ -7,8 +8,8 @@ spec:
     istio: ingressgateway
   servers:
   - hosts:
-    - hello-ossm-ts.apps.example.com #route name to be autocreated for external route access.
-    - hello-ossm-ts.istio-system.svc #additional custom service to be created pointing to ingressgateway pod and declared in the virtualservice to expose this service internally
+    - hello-ossm-ts.apps.ocp.example.com
+    - hello-ossm-ts-ingressgateway.istio-system.svc
     port:
       name: http
       number: 80

@@ -5,22 +5,21 @@ metadata:
   namespace: hello-ossm-ts
 spec:
   gateways:
+  #- mesh
   - hello-ossm-ts-gw
   hosts:
-  - hello-ossm-ts.apps.example.com # external public route exposed on router
-  - hello-ossm-ts.istio-system.svc # custom svc exposed on ingressgateway for internal cluster connection(internal cluster, external from mesh)
+  - hello-ossm-ts.apps.ocp.example.com
+  - hello-ossm-ts-ingressgateway.istio-system.svc 
   http:
   - match:
     - uri:
         exact: /
     route:
     - destination:
-        host: hello-ossm-ts-v1
-        port:
-          number: 8080
+        host: hello-ossm-ts
+        subset: v1
       weight: 20
     - destination:
-        host: hello-ossm-ts-v2
-        port:
-          number: 8080
+        host: hello-ossm-ts
+        subset: v2
       weight: 80
