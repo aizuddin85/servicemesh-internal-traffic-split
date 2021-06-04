@@ -2,7 +2,7 @@
 ## Prerequisites.
 * Service Mesh 2.x installed and running.
 * Namespace enrolled properly in SMMR.
-* Additional ingressgateway router (optional), e.g:
+* Additional ingressgateway router (we are going to use this ingressgateway service fqdn as service hostname for our service later), e.g:
 ```yaml
     additionalIngress:
       hello-ossm-ts-ingressgateway:
