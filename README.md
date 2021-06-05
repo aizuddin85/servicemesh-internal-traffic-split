@@ -19,8 +19,8 @@
 
 Client Pods (Outside Mesh) -> IngressGateway(custom svc name) -> VirtualService (80/20 split weight)
 
-## Steps
-NOTE: Remember to change parameters based on current environment configured.
+## Steps.
+NOTE: Remember to change parameters based on the current environment configurations.
 
 1. Deploy both apps version.  
 ```shell
