@@ -39,6 +39,8 @@ spec:
               enabled: true
               minReplicas: 2
               maxReplicas: 6
+         service:
+           type: ClusterIP
 #    additionalEgress:
 #      some-other-egress-gateway: {}
 
